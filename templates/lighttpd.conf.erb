@@ -26,8 +26,8 @@ $SERVER["socket"] == "<%= scope.lookupvar('mod_adlog::lb_bind') %>:443" {
 <% end -%>
 server.pid-file            = "/var/run/lighttpd.pid"
 server.max-fds		   = 4096
-server.max-keep-alive-requests = 100
-server.max-keep-alive-idle = 20
+server.max-keep-alive-requests = 0
+server.max-keep-alive-idle = 4 
 server.max-read-idle = 60
 server.max-write-idle = 10
 server.network-backend = "linux-sendfile"
