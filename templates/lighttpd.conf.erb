@@ -1,43 +1,43 @@
 server.modules  = (
     "mod_adlog",
 )
-server.document-root        = "/var/www"
-server.errorlog             = "/var/log/lighttpd/error.log"
-server.port                = 80
-server.bind                = "<%= scope.lookupvar('mod_adlog::bind') %>"
-<% if scope.lookupvar('mod_adlog::ssl_cert') and scope.lookupvar('mod_adlog::ssl_ca') -%>
-$SERVER["socket"] == "<%= scope.lookupvar('mod_adlog::bind') %>:443" {
-    ssl.engine = "enable"
-    ssl.pemfile = "<%= scope.lookupvar('mod_adlog::ssl_cert') %>"
-    ssl.ca-file = "<%= scope.lookupvar('mod_adlog::ssl_ca') %>"
+server.document-root    = "/var/www"
+server.errorlog         = "/var/log/lighttpd/error.log"
+server.port             = 80
+server.bind             = "<%= bind %>"
+<% if ssl_cert and ssl_ca -%>
+$SERVER["socket"] == "<%= bind %>:443" {
+    ssl.engine  = "enable"
+    ssl.pemfile = "<%= ssl_cert %>"
+    ssl.ca-file = "<%= ssl_ca %>"
 }
 <% end -%>
-<% if scope.lookupvar('mod_adlog::lb_bind') -%>
+<% if lb_bind -%>
 # Listen on the following host and port for http load-balancing
-$SERVER["socket"] == "<%= scope.lookupvar('mod_adlog::lb_bind') %>:80" { }
+$SERVER["socket"] == "<%= lb_bind %>:80" { }
 <% end -%>
-<% if scope.lookupvar('mod_adlog::ssl_cert') and scope.lookupvar('mod_adlog::ssl_ca') and scope.lookupvar('mod_adlog::lb_bind') -%>
+<% if ssl_cert and ssl_ca and lb_bind -%>
 # Listen on the following host and port for https load-balancing
-$SERVER["socket"] == "<%= scope.lookupvar('mod_adlog::lb_bind') %>:443" {
-    ssl.engine = "enable"
-    ssl.pemfile = "<%= scope.lookupvar('mod_adlog::ssl_cert') %>"
-    ssl.ca-file = "<%= scope.lookupvar('mod_adlog::ssl_ca') %>"
+$SERVER["socket"] == "<%= lb_bind %>:443" {
+    ssl.engine  = "enable"
+    ssl.pemfile = "<%= ssl_cert %>"
+    ssl.ca-file = "<%= ssl_ca %>"
 }
 <% end -%>
-server.pid-file            = "/var/run/lighttpd.pid"
-server.max-fds		   = 4096
-server.max-keep-alive-requests = 0
-server.max-keep-alive-idle = 4 
-server.max-read-idle = 60
-server.max-write-idle = 10
-server.network-backend = "linux-sendfile"
-server.event-handler = "linux-sysepoll" # needed on OS X
-server.username            = "www-data"
-server.groupname           = "www-data"
+server.pid-file                 = "/var/run/lighttpd.pid"
+server.max-fds                  = 4096
+server.max-keep-alive-requests  = 0
+server.max-keep-alive-idle      = 4
+server.max-read-idle            = 60
+server.max-write-idle           = 10
+server.network-backend          = "linux-sendfile"
+server.event-handler            = "linux-sysepoll" # needed on OS X
+server.username                 = "www-data"
+server.groupname                = "www-data"
 
-adlog.mysql-host = "<%= scope.lookupvar('mod_adlog::host') %>"
-adlog.mysql-user = "<%= scope.lookupvar('mod_adlog::user') %>"
-adlog.mysql-password = "<%= scope.lookupvar('mod_adlog::password') %>"
-adlog.mysql-db = "<%= scope.lookupvar('mod_adlog::db') %>"
-adlog.mysql-table = "<%= scope.lookupvar('mod_adlog::table') %>"
-adlog.period-interval = 60
+adlog.mysql-host        = "<%= host %>"
+adlog.mysql-user        = "<%= user %>"
+adlog.mysql-password    = "<%= password %>"
+adlog.mysql-db          = "<%= db %>"
+adlog.mysql-table       = "<%= table %>"
+adlog.period-interval   = 60
