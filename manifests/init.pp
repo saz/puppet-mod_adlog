@@ -21,7 +21,7 @@ class mod_adlog (
   $password = 'password',
   $db = 'adserv',
   $table = 'stats'
-) inherits mod_adlog__params {
+) inherits mod_adlog::params {
 
   package { $mod_adlog::params::package_name:
     ensure => installed,
@@ -29,9 +29,9 @@ class mod_adlog (
 
   file { $mod_adlog::params::config_file:
     ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 640,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0640',
     content => template("${module_name}/lighttpd.conf.erb"),
     require => Package[$mod_adlog::params::package_name],
     notify  => Service[$mod_adlog::params::service_name],
@@ -39,9 +39,9 @@ class mod_adlog (
 
   file { '/var/www/test.txt':
     ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     content => 'this is a nagios check_http check file, do not remove!',
     require => File[$mod_adlog::params::config_file],
     notify  => Service[$mod_adlog::params::service_name],
